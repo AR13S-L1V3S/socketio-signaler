@@ -1,0 +1,60 @@
+{
+  "name": "socketio-signaler",
+  "subdomain": "socketio-signaler",
+  "preferGlobal": false,
+  "version": "0.0.1",
+  "author": {
+    "name": "Tom Lagier",
+    "email": "lagierta@gmail.com"
+  },
+  "description": "SocketIO signaling server",
+  "contributors": [
+    {
+      "name": "Tom Lagier",
+      "email": "lagierta@gmail.com"
+    }
+  ],
+  "scripts": {
+    "start": "node signaler.js"
+  },
+  "main": "signaler.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcmouse/socketio-signaler.git"
+  },
+  "keywords": [
+    "webrtc",
+    "javascript",
+    "io",
+    "socket",
+    "socket.io",
+    "socketio-over-nodejs",
+    "websockets",
+    "nodejs",
+    "node",
+    "node.js",
+    "webrtc-signaling",
+    "channels",
+    "namespaces",
+    "rooms",
+    "signalling",
+    "signaling"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6"
+  },
+  "bugs": {
+    "url": "https://github.com/mcmouse/socketio-signaler/issues"
+  },
+  "homepage": "https://github.com/mcmouse/socketio-signaler/",
+  "maintainers": [
+    {
+      "name": "mcmouse",
+      "email": "lagierta@gmail.com"
+    }
+  ],
+  "dependencies": {
+    "socket.io": "^1.3.3"
+  }
+}
