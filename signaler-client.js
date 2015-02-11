@@ -4,11 +4,11 @@
 (function (root, factory) {
   'use strict';
   if (typeof define === 'function' && define.amd) {
-    define(['EventEmitter', 'io'], function (EventEmitter, io) {
-      return factory(window, EventEmitter, io);
+    define(['eventEmitter/EventEmitter'], function (EventEmitter) {
+      return factory(window, EventEmitter, root.io);
     });
   } else if (typeof exports === 'object') {
-    module.exports = factory(window, require('events').EventEmitter, require('socket.io-client'));
+    module.exports = factory(window, require('wolfy87-eventemitter'), require('socket.io-client'));
   } else {
     root.SignallerPeerConnection = factory(window, root.EventEmitter, root.io);
   }
@@ -19,19 +19,31 @@
 
     this.peerConnections = [];
 
-    //Declare our public STUN server
-    this.iceServers = {
-      iceServers: [{
-        url: 'stun:stun.l.google.com:19302'
-      }]
-    };
+    if (navigator.mozGetUserMedia) {
+      //Declare our public STUN server
+      this.iceServers = {
+        'iceServers': [{
+          'url': 'stun:23.21.150.121'
+        }]
+      };
+      //Set constraints to properly negotiate connection
+    } else {
+      this.iceServers = {
+        'iceServers': [{
+          'url': 'stun:stun.l.google.com:19302'
+        }]
+      };
+    }
 
     //Set constraints to properly negotiate connection
     this.constraints = {
       mandatory: {
         OfferToReceiveAudio: true,
-        OfferToReceiveVideo: true,
-      }
+        OfferToReceiveVideo: true
+      },
+      optional: [{
+        DtlsSrtpKeyAgreement: true
+      }, ]
     };
 
     //Set up our prefixed defaults
@@ -144,6 +156,19 @@
       peer.connection.ondatachannel = function (event) {
         if (options.debug) console.log('Data channel added from ' + peer.id);
         this.emit('dataChannelAdded', event.channel, peer.id);
+      }.bind(this);
+
+      peer.connection.oniceconnectionstatechange = function () {
+        switch (peer.connection.iceConnectionState) {
+        case 'disconnected':
+        case 'failed':
+          this.logError('iceConnectionState is disconnected, closing connections to ' + peer.id);
+          peer.connection.close();
+          break;
+        case 'completed':
+          peer.connection.onicecandidate = function () {};
+          break;
+        }
       }.bind(this);
 
       return peer;
